@@ -2,62 +2,286 @@ const express = require("express");
 const { Telegraf, Markup } = require("telegraf");
 
 const app = express();
-app.use(express.json());
-
 const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const WEB_APP_URL = process.env.WEB_APP_URL || "https://YOUR-RENDER-SERVICE.onrender.com";
 
-const html = `<!DOCTYPE html>
+app.use(express.json());
+
+const html = `
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Christmas Carnival</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Christmas Carnival</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07180f;color:#fff;font-family:Arial,sans-serif;padding-bottom:85px}
-header{padding:22px 18px;background:linear-gradient(135deg,#123c25,#07180f);border-bottom:1px solid #b99745}
-.logo{text-align:center;color:#f5d477;font-size:25px;font-weight:bold}
-.subtitle{text-align:center;color:#b9c9bc;font-size:12px;margin-top:6px}
-.container{padding:16px;max-width:520px;margin:auto}
-.card{background:#122b1d;border:1px solid #28543a;border-radius:17px;padding:17px;margin-bottom:15px}
-.hero{background:linear-gradient(135deg,#174c2c,#10251a);text-align:center}
-.label{font-size:12px;color:#b7c8ba}
-.balance{font-size:32px;color:#f5d477;font-weight:bold;margin:10px}
-.btn{border:0;border-radius:12px;padding:13px 17px;background:linear-gradient(135deg,#f3d477,#bd8e32);color:#152315;font-weight:bold;width:100%;font-size:14px;margin-top:10px}
-.btn:disabled{opacity:.5}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:#193b27;padding:14px;border-radius:13px;text-align:center}
-.stat strong{display:block;color:#f5d477;font-size:20px;margin-top:7px}
-h2{font-size:18px;margin-top:0;color:#f5d477}
-p{color:#c1d0c4;font-size:13px;line-height:1.6}
-nav{position:fixed;bottom:0;left:0;right:0;background:#0d2417;border-top:1px solid #31553b;display:flex;justify-content:space-around;padding:10px 2px;z-index:5}
-nav button{background:none;border:0;color:#b9c9bc;font-size:10px;padding:5px}
-nav button.active{color:#f5d477}
+body{
+ margin:0;
+ background:#07170e;
+ color:white;
+ font-family:Arial,sans-serif;
+ padding:18px;
+ padding-bottom:90px;
+}
+header{text-align:center;padding:15px}
+header h1{color:#f6ce62;font-size:27px}
+header p{color:#b9cdbd}
+.card{
+ background:#142d20;
+ border:1px solid #315b3e;
+ border-radius:17px;
+ padding:18px;
+ margin:14px 0;
+ text-align:center;
+}
+button{
+ background:#e8bd50;
+ color:#172316;
+ border:0;
+ padding:13px 20px;
+ border-radius:12px;
+ font-weight:bold;
+ margin:6px;
+ cursor:pointer;
+}
+button:disabled{opacity:.5}
+nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:#10271a;
+ display:flex;
+ justify-content:space-around;
+ padding:10px 2px;
+ border-top:1px solid #315b3e;
+}
+nav button{
+ background:transparent;
+ color:white;
+ padding:8px 4px;
+ font-size:11px;
+ margin:0;
+}
+nav button.active{color:#f6ce62}
 .page{display:none}
 .page.active{display:block}
-.wheel-wrap{width:270px;height:270px;margin:20px auto;position:relative}
-#wheel{width:100%;height:100%;border-radius:50%;border:8px solid #d5ae50;background:conic-gradient(#a51d2d 0deg 45deg,#e6bd57 45deg 90deg,#176c3b 90deg 135deg,#a51d2d 135deg 180deg,#e6bd57 180deg 225deg,#176c3b 225deg 270deg,#a51d2d 270deg 315deg,#e6bd57 315deg 360deg);transition:transform 4s cubic-bezier(.15,.7,.1,1);position:relative}
-.wheel-label{position:absolute;font-size:12px;font-weight:bold;color:#fff;text-shadow:1px 1px 3px #000}
-.pointer{position:absolute;top:-12px;left:calc(50% - 13px);border-left:13px solid transparent;border-right:13px solid transparent;border-top:27px solid #fff;z-index:2}
-.wheel-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:55px;height:55px;border-radius:50%;background:#f4d477;border:5px solid #fff;z-index:1}
-input{width:100%;padding:13px;border-radius:10px;border:1px solid #42634c;background:#091b11;color:white;margin-top:9px}
-.row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #294533;font-size:13px}
-.small{font-size:11px;color:#a8b9ac}
+.big{font-size:30px;color:#f6ce62;font-weight:bold}
+.wheel{
+ width:210px;
+ height:210px;
+ border-radius:50%;
+ margin:20px auto;
+ border:7px solid #e8bd50;
+ background:conic-gradient(
+ #d82c36 0deg 45deg,
+ #f5d56a 45deg 90deg,
+ #287b45 90deg 135deg,
+ #d82c36 135deg 180deg,
+ #f5d56a 180deg 225deg,
+ #287b45 225deg 270deg,
+ #d82c36 270deg 315deg,
+ #f5d56a 315deg 360deg
+ );
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ color:#14251a;
+ font-weight:bold;
+ font-size:20px;
+ transition:transform 3s ease-out;
+}
+input{
+ width:100%;
+ padding:13px;
+ border-radius:10px;
+ border:1px solid #55745d;
+ background:#07170e;
+ color:white;
+ margin:8px 0;
+}
+.notice{font-size:12px;color:#b9cdbd}
 </style>
 </head>
+
 <body>
+
 <header>
-<div class="logo">🎄 CHRISTMAS CARNIVAL</div>
-<div class="subtitle">MINE • SPIN • EARN • CELEBRATE</div>
+<h1>🎄 CHRISTMAS CARNIVAL 🎄</h1>
+<p>Celebrate, play and earn demo points!</p>
 </header>
 
-<div class="container">
-
 <section id="home" class="page active">
-<div class="card hero">
-<div style="font-size:35px">🎅 🎁 ❄️</div>
+<div class="card">
 <h2>Welcome to Christmas Carnival!</h2>
-<p>Your festive reward
+<p>Enjoy the games and explore the carnival.</p>
+<div class="big" id="homePoints">0</div>
+<p>Your demo points</p>
+</div>
+<div class="card">
+<h3>🎁 Carnival Activities</h3>
+<p>Mine points, spin the wheel and invite friends.</p>
+</div>
+</section>
+
+<section id="mining" class="page">
+<div class="card">
+<h2>⛏️ Mining Station</h2>
+<p>Collect demo points every time you mine.</p>
+<div class="big" id="minePoints">0</div>
+<button onclick="mine()">START MINING</button>
+<p id="mineMessage" class="notice"></p>
+</div>
+</section>
+
+<section id="wheel" class="page">
+<div class="card">
+<h2>🎡 Lucky Wheel</h2>
+<p>See what prize the wheel lands on!</p>
+<div class="wheel" id="wheel">SPIN</div>
+<button onclick="spin()">SPIN THE WHEEL</button>
+<p id="wheelMessage"></p>
+</div>
+</section>
+
+<section id="rewards" class="page">
+<div class="card">
+<h2>🎁 Rewards</h2>
+<p>Your demo points balance:</p>
+<div class="big" id="rewardPoints">0</div>
+<p class="notice">Rewards shown here are demonstrations only.</p>
+</div>
+</section>
+
+<section id="invite" class="page">
+<div class="card">
+<h2>👥 Invite Friends</h2>
+<p>Invite friends to discover the carnival.</p>
+<button onclick="invite()">INVITE FRIENDS</button>
+</div>
+</section>
+
+<section id="withdraw" class="page">
+<div class="card">
+<h2>💰 Withdraw</h2>
+<p>Withdrawal features are not yet available.</p>
+<button disabled>WITHDRAW</button>
+<p class="notice">No real USDT is currently being paid or withdrawn.</p>
+</div>
+</section>
+
+<section id="league" class="page">
+<div class="card">
+<h2>🏆 Carnival League</h2>
+<p>Compete and enjoy the carnival!</p>
+<p>Leaderboard coming soon.</p>
+</div>
+</section>
+
+<nav>
+<button class="active" onclick="showPage('home',this)">🏠 Home</button>
+<button onclick="showPage('mining',this)">⛏️ Mine</button>
+<button onclick="showPage('wheel',this)">🎡 Wheel</button>
+<button onclick="showPage('rewards',this)">🎁 Rewards</button>
+<button onclick="showPage('invite',this)">👥 Invite</button>
+<button onclick="showPage('withdraw',this)">💰 Withdraw</button>
+<button onclick="showPage('league',this)">🏆 League</button>
+</nav>
+
+<script>
+let points = 0;
+let lastMine = 0;
+let spinning = false;
+
+function updatePoints(){
+ document.getElementById("homePoints").textContent=points;
+ document.getElementById("minePoints").textContent=points;
+ document.getElementById("rewardPoints").textContent=points;
+}
+
+function showPage(id,button){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+}
+
+function mine(){
+ const now=Date.now();
+ if(now-lastMine<60000){
+  document.getElementById("mineMessage").textContent="Please wait before mining again.";
+  return;
+ }
+ lastMine=now;
+ points+=10;
+ updatePoints();
+ document.getElementById("mineMessage").textContent="You collected 10 demo points!";
+}
+
+function spin(){
+ if(spinning)return;
+ spinning=true;
+ const wheel=document.getElementById("wheel");
+ const prizes=[5,10,20,50,100];
+ const prize=prizes[Math.floor(Math.random()*prizes.length)];
+ wheel.style.transform="rotate("+(1800+Math.floor(Math.random()*360))+"deg)";
+ document.getElementById("wheelMessage").textContent="The wheel is spinning...";
+ setTimeout(()=>{
+  points+=prize;
+  updatePoints();
+  document.getElementById("wheelMessage").textContent="Congratulations! You won "+prize+" demo points!";
+  wheel.style.transform="rotate(0deg)";
+  spinning=false;
+ },3000);
+}
+
+function invite(){
+ if(window.Telegram && Telegram.WebApp){
+  Telegram.WebApp.openTelegramLink("https://t.me/share/url?url="+encodeURIComponent(location.href)+"&text="+encodeURIComponent("Join me at Christmas Carnival!"));
+ }else{
+  alert("Open this app inside Telegram to invite friends.");
+ }
+}
+
+if(window.Telegram && Telegram.WebApp){
+ Telegram.WebApp.ready();
+ Telegram.WebApp.expand();
+}
+</script>
+
+</body>
+</html>
+`;
+
+app.get("/", (req, res) => {
+ res.send(html);
+});
+
+app.get("/health", (req, res) => {
+ res.json({ status: "ok", app: "Christmas Carnival" });
+});
+
+if (BOT_TOKEN) {
+ const bot = new Telegraf(BOT_TOKEN);
+
+ bot.start(async (ctx) => {
+  await ctx.reply(
+   "🎄 Welcome to Christmas Carnival!",
+   Markup.inlineKeyboard([
+    [Markup.button.webApp("🎁 Open Christmas Carnival", WEB_APP_URL)]
+   ])
+  );
+ });
+
+ bot.launch().catch(err => {
+  console.error("Telegram bot error:", err.message);
+ });
+}
+
+app.listen(PORT, () => {
+ console.log("Christmas Carnival server running on port " + PORT);
+});
