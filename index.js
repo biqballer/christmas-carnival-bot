@@ -245,3 +245,350 @@ app.get("/", (req, res) => res.send(html));
 app.get("/health", (req, res) => {
   res.json({ status: "ok", app: "Christmas Carnival" });
 });
+// DATABASE SETUP
+async function setupDatabase() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS players (
+      telegram_id BIGINT PRIMARY KEY,
+      username TEXT,
+      first_name TEXT,
+      balance NUMERIC(20,6) NOT NULL DEFAULT 0,
+      referred_by BIGINT REFERENCES players(telegram_id),
+      mining_started_at TIMESTAMPTZ,
+      mining_ends_at TIMESTAMPTZ,
+      mining_credited_until TIMESTAMPTZ,
+      mining_notified_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+}
+
+// VERIFY TELEGRAM LOGIN
+function verifyTelegram(initData) {
+  if (!initData) throw new Error("Telegram login required");
+
+  const params = new URLSearchParams(initData);
+  const hash = params.get("hash");
+
+  if (!hash) throw new Error("Invalid Telegram login");
+
+  const authDate = Number(params.get("auth_date"));
+
+  if (!authDate || Date.now() / 1000 - authDate > 86400 ||
+      authDate > Date.now() / 1000 + 60) {
+    throw new Error("Telegram login expired. Reopen the app.");
+  }
+
+  const checkString = [...params.entries()]
+    .filter(([key]) => key !== "hash")
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, value]) => `${key}=${value}`)
+    .join("\n");
+
+  const secret = crypto
+    .createHmac("sha256", "WebAppData")
+    .update(BOT_TOKEN)
+    .digest();
+
+  const calculated = crypto
+    .createHmac("sha256", secret)
+    .update(checkString)
+    .digest("hex");
+
+  const a = Buffer.from(hash, "hex");
+  const b = Buffer.from(calculated, "hex");
+
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    throw new Error("Telegram verification failed");
+  }
+
+  const user = JSON.parse(params.get("user") || "null");
+
+  if (!user || !user.id) throw new Error("Player information missing");
+
+  return { user, params };
+}
+
+// AUTHENTICATION MIDDLEWARE
+async function authenticate(req, res, next) {
+  try {
+    const initData = req.headers["x-telegram-init-data"];
+    const verified = verifyTelegram(initData);
+
+    req.player = verified.user;
+    req.startParam = verified.params.get("start_param");
+
+    next();
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+}
+
+// CREATE OR FIND PLAYER
+async function getPlayer(user, startParam) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    let referralId = null;
+
+    if (startParam && startParam.startsWith("ref_")) {
+      const possibleId = startParam.slice(4);
+
+      if (/^\d+$/.test(possibleId) &&
+          possibleId !== String(user.id)) {
+        referralId = possibleId;
+      }
+    }
+
+    const existing = await client.query(
+      "SELECT * FROM players WHERE telegram_id=$1 FOR UPDATE",
+      [String(user.id)]
+    );
+
+    if (existing.rows.length) {
+      await client.query("COMMIT");
+      return existing.rows[0];
+    }
+
+    if (referralId) {
+      const referrer = await client.query(
+        "SELECT telegram_id FROM players WHERE telegram_id=$1 FOR UPDATE",
+        [referralId]
+      );
+
+      if (!referrer.rows.length) referralId = null;
+    }
+
+    const created = await client.query(`
+      INSERT INTO players
+      (telegram_id, username, first_name, referred_by)
+      VALUES ($1,$2,$3,$4)
+      RETURNING *
+    `, [
+      String(user.id),
+      user.username || null,
+      user.first_name || "Player",
+      referralId
+    ]);
+
+    if (referralId) {
+      await client.query(
+        "UPDATE players SET balance=balance+50 WHERE telegram_id=$1",
+        [referralId]
+      );
+    }
+
+    await client.query("COMMIT");
+    return created.rows[0];
+
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// CREDIT MINING EARNINGS SAFELY
+async function settleMining(telegramId) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const result = await client.query(
+      "SELECT * FROM players WHERE telegram_id=$1 FOR UPDATE",
+      [String(telegramId)]
+    );
+
+    if (!result.rows.length) throw new Error("Player not found");
+
+    const player = result.rows[0];
+
+    if (player.mining_started_at && player.mining_ends_at) {
+      const now = Date.now();
+      const end = new Date(player.mining_ends_at).getTime();
+      const last = new Date(player.mining_credited_until).getTime();
+
+      const through = Math.min(now, end);
+      const seconds = Math.max(0, (through - last) / 1000);
+      const reward = seconds * 50 / 3600;
+
+      if (reward > 0) {
+        await client.query(`
+          UPDATE players
+          SET balance=balance+$1,
+              mining_credited_until=$2
+          WHERE telegram_id=$3
+        `, [
+          reward,
+          new Date(through),
+          String(telegramId)
+        ]);
+      }
+    }
+
+    const updated = await client.query(
+      "SELECT * FROM players WHERE telegram_id=$1",
+      [String(telegramId)]
+    );
+
+    await client.query("COMMIT");
+    return updated.rows[0];
+
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// PLAYER ACCOUNT
+app.get("/api/me", authenticate, async (req, res) => {
+  try {
+    await getPlayer(req.player, req.startParam);
+
+    const player = await settleMining(req.player.id);
+
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM players WHERE referred_by=$1",
+      [String(req.player.id)]
+    );
+
+    res.json({
+      balance: player.balance,
+      mining_active: !!player.mining_ends_at &&
+        new Date(player.mining_ends_at) > new Date(),
+      mining_started_at: player.mining_started_at,
+      mining_ends_at: player.mining_ends_at,
+      referral_count: Number(count.rows[0].count),
+      referral_link: `https://t.me/${botUsername}?start=ref_${req.player.id}`
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not load account" });
+  }
+});
+
+// START A NEW MINING SESSION
+app.post("/api/mining/start", authenticate, async (req, res) => {
+  try {
+    await getPlayer(req.player, req.startParam);
+
+    const player = await settleMining(req.player.id);
+
+    if (player.mining_ends_at &&
+        new Date(player.mining_ends_at) > new Date()) {
+      return res.status(400).json({
+        error: "Your mining session is already active."
+      });
+    }
+
+    const started = await pool.query(`
+      UPDATE players
+      SET mining_started_at=NOW(),
+          mining_ends_at=NOW()+INTERVAL '24 hours',
+          mining_credited_until=NOW(),
+          mining_notified_at=NULL
+      WHERE telegram_id=$1
+      RETURNING *
+    `, [String(req.player.id)]);
+
+    res.json({
+      balance: started.rows[0].balance,
+      mining_started_at: started.rows[0].mining_started_at,
+      mining_ends_at: started.rows[0].mining_ends_at
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not start mining" });
+  }
+});
+
+// TELEGRAM BOT
+bot.start(async (ctx) => {
+  try {
+    const payload = ctx.startPayload || "";
+
+    const startParam = payload.startsWith("ref_")
+      ? payload
+      : null;
+
+    await getPlayer(ctx.from, startParam);
+
+    await ctx.reply(
+      "🎄 Welcome to Christmas Carnival!\n\nYour festive rewards journey starts here.",
+      Markup.inlineKeyboard([
+        Markup.button.webApp(
+          "🎁 Open Christmas Carnival",
+          WEB_APP_URL
+        )
+      ])
+    );
+
+  } catch (error) {
+    console.error(error);
+    await ctx.reply("Sorry, something went wrong. Please try again.");
+  }
+});
+
+// NOTIFY PLAYERS WHEN MINING EXPIRES
+async function notifyExpiredMining() {
+  const result = await pool.query(`
+    SELECT telegram_id
+    FROM players
+    WHERE mining_ends_at <= NOW()
+      AND mining_notified_at IS NULL
+    LIMIT 100
+  `);
+
+  for (const player of result.rows) {
+    try {
+      await bot.telegram.sendMessage(
+        String(player.telegram_id),
+        "🎄 Your Christmas Carnival mining session has ended!\n\nYour 24-hour session is complete. Return to Christmas Carnival and tap Start Mining to begin another session."
+      );
+
+      await pool.query(`
+        UPDATE players
+        SET mining_notified_at=NOW()
+        WHERE telegram_id=$1
+          AND mining_notified_at IS NULL
+      `, [player.telegram_id]);
+
+    } catch (error) {
+      console.error("Notification error:", error.message);
+    }
+  }
+}
+
+// START SERVER
+async function startServer() {
+  await setupDatabase();
+
+  const me = await bot.telegram.getMe();
+  botUsername = me.username;
+
+  await bot.launch();
+
+  setInterval(() => {
+    notifyExpiredMining().catch(console.error);
+  }, 30000);
+
+  app.listen(PORT, () => {
+    console.log("Christmas Carnival server running on port " + PORT);
+  });
+}
+
+startServer().catch(error => {
+  console.error("SERVER STARTUP ERROR:", error);
+  process.exit(1);
+});
+
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
