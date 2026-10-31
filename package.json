@@ -1,6 +1,6 @@
 {
-  "name": "christmas-carnival-bot",
-  "version": "1.0.0",
+  "name": "christmas-carnival",
+  "version": "2.0.0",
   "private": true,
   "description": "Christmas Carnival Telegram Mini App",
   "main": "index.js",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "telegraf": "^4.16.3"
+    "telegraf": "^4.16.3",
+    "pg": "^8.13.1"
   }
 }
