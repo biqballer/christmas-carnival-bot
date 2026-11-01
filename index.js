@@ -34,22 +34,177 @@ const html = `<!DOCTYPE html>
 body{margin:0;background:#071b13;color:#fff;font-family:Arial,sans-serif}
 header{padding:22px 18px;text-align:center;background:linear-gradient(135deg,#103d29,#071b13);border-bottom:1px solid #b99a48}
 .logo{font-size:25px;font-weight:bold;color:#f5d77b}
-.sub{font-size:12px;color:#c9c9b8;margin-top:6px}
-main{padding:18px;max-width:480px;margin:auto}
-.card{background:linear-gradient(145deg,#153b2a,#10291e);border:1px solid #426344;border-radius:18px;padding:20px;margin-bottom:16px}
-.label{font-size:12px;color:#c4cbbd}
-.balance{font-size:37px;font-weight:bold;color:#f6d879;margin:10px 0}
-.gold{color:#f6d879}
-button{width:100%;padding:15px;border:0;border-radius:12px;background:linear-gradient(90deg,#d7ae49,#f5df91);color:#172417;font-size:16px;font-weight:bold;margin-top:12px}
-button:disabled{opacity:.5}
-.row{display:flex;justify-content:space-between;gap:10px;margin:13px 0;font-size:14px}
-.bar{height:9px;background:#304a37;border-radius:20px;overflow:hidden;margin-top:12px}
-.progress{height:100%;width:0;background:#e6c45e}
-nav{display:flex;gap:8px;margin-bottom:16px}
-nav button{margin:0;padding:12px 5px;font-size:13px}
-.hidden{display:none}
-.notice{text-align:center;color:#c5c9bc;font-size:13px;line-height:1.6}
-#status{padding:12px;text-align:center;color:#f5d77b;font-size:13px}
+.sub{font-size:12px;color:#c9
+</style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at top, #243b68 0%, transparent 55%),
+    linear-gradient(180deg, #080f20 0%, #111a30 55%, #080d19 100%);
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+
+header {
+  padding: 24px 16px;
+  text-align: center;
+  background: linear-gradient(135deg, #172b4d, #10182a);
+  border-bottom: 1px solid rgba(255, 207, 112, 0.4);
+  box-shadow: 0 8px 30px #0005;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 900;
+  color: #ffda87;
+  letter-spacing: 1px;
+  text-shadow: 0 0 18px #ffbd5944;
+}
+
+.sub {
+  font-size: 12px;
+  color: #c8d4e9;
+  margin-top: 8px;
+}
+
+main {
+  padding: 18px 14px 100px;
+  max-width: 480px;
+  margin: auto;
+}
+
+.card {
+  background: linear-gradient(145deg, #202e49, #121d32);
+  border: 1px solid #ffffff18;
+  border-radius: 22px;
+  padding: 21px;
+  margin-bottom: 17px;
+  box-shadow: 0 12px 30px #0004;
+}
+
+.label {
+  font-size: 11px;
+  color: #b8c7df;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+}
+
+.balance {
+  font-size: 36px;
+  font-weight: 900;
+  color: #ffda87;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+
+.gold {
+  color: #ffda87;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ffe4a4;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffdf96, #e8aa43);
+  color: #17213a;
+  font-size: 15px;
+  font-weight: 900;
+  margin-top: 12px;
+  box-shadow: 0 5px 18px #e8aa4330;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.55;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+  font-size: 13px;
+}
+
+.bar {
+  height: 9px;
+  background: #ffffff16;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.progress {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #e5a63f, #fff0ae);
+  border-radius: 20px;
+  transition: width 0.5s;
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+nav button {
+  margin: 0;
+  padding: 12px 5px;
+  font-size: 12px;
+  color: #e6edf9;
+  background: #ffffff0d;
+  border: 1px solid #ffffff20;
+  box-shadow: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.notice {
+  text-align: center;
+  color: #c5d0e3;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+#status {
+  padding: 12px;
+  text-align: center;
+  color: #ffda87;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+h3 {
+  color: #ffda87;
+}
+
+@media (max-width: 360px) {
+  .logo {
+    font-size: 19px;
+  }
+
+  .balance {
+    font-size: 30px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+}
 </style>
 </head>
 <body>
