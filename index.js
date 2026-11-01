@@ -567,28 +567,35 @@ async function notifyExpiredMining() {
   }
 }
 
-// START SERVER
-async function startServer() {
-  await setupDatabase();
-
-  const me = await bot.telegram.getMe();
-  botUsername = me.username;
-
-  await bot.launch();
-
-  setInterval(() => {
-    notifyExpiredMining().catch(console.error);
-  }, 30000);
-
-  app.listen(PORT, () => {
-    console.log("Christmas Carnival server running on port " + PORT);
-  });
-}
-
-startServer().catch(error => {
-  console.error("SERVER STARTUP ERROR:", error);
-  process.exit(1);
+// START WEB SERVER FIRST
+const server = app.listen(PORT, () => {
+  console.log("Christmas Carnival server running on port " + PORT);
 });
 
+// START DATABASE AND TELEGRAM SERVICES
+async function startBackgroundServices() {
+  try {
+    await setupDatabase();
+
+    const me = await bot.telegram.getMe();
+    botUsername = me.username;
+
+    bot.launch().catch(error => {
+      console.error("TELEGRAM BOT STARTUP ERROR:", error);
+    });
+
+    setInterval(() => {
+      notifyExpiredMining().catch(error => {
+        console.error("MINING NOTIFICATION ERROR:", error);
+      });
+    }, 30000);
+
+    console.log("Christmas Carnival services initialized.");
+  } catch (error) {
+    console.error("BACKGROUND SERVICE ERROR:", error);
+  }
+}
+
+startBackgroundServices();
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
