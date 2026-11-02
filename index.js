@@ -41,27 +41,39 @@ header{padding:22px 18px;text-align:center;background:linear-gradient(135deg,#10
 body {
   margin: 0;
   background:
-    radial-gradient(ellipse at top, #243b68 0%, transparent 55%),
-    linear-gradient(180deg, #080f20 0%, #111a30 55%, #080d19 100%);
+    radial-gradient(ellipse at 50% 0%, #35106b 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 35%, #25104d 0%, transparent 45%),
+    radial-gradient(ellipse at 0% 75%, #102e68 0%, transparent 40%),
+    linear-gradient(180deg, #08051b 0%, #100727 50%, #050311 100%);
   color: #ffffff;
   font-family: Arial, sans-serif;
   min-height: 100vh;
 }
 
 header {
-  padding: 24px 16px;
+  padding: 28px 16px;
   text-align: center;
-  background: linear-gradient(135deg, #172b4d, #10182a);
-  border-bottom: 1px solid rgba(255, 207, 112, 0.4);
-  box-shadow: 0 8px 30px #0005;
+  background:
+    radial-gradient(ellipse at top, #5520a0 0%, transparent 75%),
+    linear-gradient(135deg, #1b0b38, #09051a 85%);
+  border-bottom: 2px solid #e8bd76;
+  box-shadow:
+    0 8px 30px #0008,
+    0 0 25px #7b2cff33;
+  position: relative;
+  overflow: hidden;
 }
 
 .logo {
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 900;
-  color: #ffda87;
-  letter-spacing: 1px;
-  text-shadow: 0 0 18px #ffbd5944;
+  color: #ffe5a3;
+  letter-spacing: 1.8px;
+  text-shadow:
+    0 0 8px #ffd778,
+    0 0 18px #a855f7,
+    0 0 35px #7c3aed;
+  animation: festiveGlow 3s ease-in-out infinite;
 }
 
 .sub {
@@ -77,12 +89,16 @@ main {
 }
 
 .card {
-  background: linear-gradient(145deg, #202e49, #121d32);
-  border: 1px solid #ffffff18;
+  background:
+    linear-gradient(145deg, #211044 0%, #120a2b 65%, #190d32 100%);
+  border: 1px solid #b98aff66;
   border-radius: 22px;
   padding: 21px;
   margin-bottom: 17px;
-  box-shadow: 0 12px 30px #0004;
+  box-shadow:
+    0 12px 30px #0007,
+    0 0 18px #7c3aed18,
+    inset 0 1px 0 #ffffff12;
 }
 
 .label {
@@ -93,11 +109,15 @@ main {
 }
 
 .balance {
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 900;
-  color: #ffda87;
+  color: #ffe5a3;
   margin: 12px 0;
   overflow-wrap: anywhere;
+  text-shadow:
+    0 0 8px #ffd77888,
+    0 0 18px #a855f766,
+    0 0 30px #7c3aed44;
 }
 
 .gold {
@@ -107,15 +127,18 @@ main {
 button {
   width: 100%;
   padding: 16px;
-  border: 1px solid #ffe4a4;
+  border: 1px solid #ffe1a0;
   border-radius: 14px;
-  background: linear-gradient(135deg, #ffdf96, #e8aa43);
-  color: #17213a;
+  background: linear-gradient(135deg, #a855f7 0%, #7135d4 50%, #47209b 100%);
+  color: #ffffff;
   font-size: 15px;
   font-weight: 900;
   margin-top: 12px;
-  box-shadow: 0 5px 18px #e8aa4330;
+  box-shadow:
+    0 5px 18px #7c3aed55,
+    inset 0 1px 0 #ffffff30;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 button:active {
@@ -155,16 +178,29 @@ nav {
   display: flex;
   gap: 8px;
   margin-bottom: 18px;
+  padding: 8px;
+  background: linear-gradient(145deg, #130923, #080513);
+  border: 1px solid #a855f744;
+  border-radius: 18px;
+  box-shadow:
+    0 8px 22px #0006,
+    0 0 18px #7c3aed18,
+    inset 0 1px 0 #ffffff10;
 }
 
 nav button {
   margin: 0;
   padding: 12px 5px;
   font-size: 12px;
-  color: #e6edf9;
-  background: #ffffff0d;
-  border: 1px solid #ffffff20;
-  box-shadow: none;
+  font-weight: 800;
+  color: #f4e8ff;
+  background: linear-gradient(145deg, #241044, #100820);
+  border: 1px solid #b98aff66;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 12px #0005,
+    inset 0 1px 0 #ffffff18;
+  transition: all 0.2s ease;
 }
 
 .hidden {
@@ -175,15 +211,24 @@ nav button {
   text-align: center;
   color: #c5d0e3;
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.6;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
-
-#status {
-  padding: 12px;
+  
+  #status {
+  padding: 14px;
   text-align: center;
-  color: #ffda87;
+  color: #ffe5a3;
   font-size: 13px;
   line-height: 1.6;
+  background: linear-gradient(145deg, #1b1033, #100820);
+  border: 1px solid #b98aff55;
+  border-radius: 14px;
+  margin-top: 12px;
+  box-shadow:
+    0 5px 18px #0005,
+    inset 0 1px 0 #ffffff10;
 }
 
 h3 {
@@ -292,19 +337,36 @@ CHRISTMAS CARNIVAL
 margin-top:24px;
 padding:20px 12px;
 border-radius:18px;
-background:linear-gradient(145deg,#0b2a1d,#35121b);
-border:1px solid #e8bd7655;
-">
+background: radial-gradient(ellipse at top left, #3b176d, transparent 65%), linear-gradient(145deg, #170c2d, #0b0619);
+border: 1px solid #e8bd76aa;
+box-shadow: 0 0 22px #a855f733, inset 0 0 18px #a855f711;
 
-<div class="label">YOUR CARNIVAL BALANCE</div>
+<div class="label" style="
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #ffe5a3;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px #ffd77888, 0 0 18px #a855f766;
+  margin-bottom: 10px;
+">
+  ✦ YOUR CARNIVAL BALANCE ✦
+</div>
 
 <div class="balance" id="balance"
 style="font-size:38px;margin:12px 0">
 0.00
 </div>
 
-<div style="font-size:12px;color:#ffdc87">
-✦ CARNIVAL POINTS ✦
+<div style="
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #c9a7ff;
+  text-shadow: 0 0 10px #a855f788;
+  margin-top: 8px;
+">
+  ✦ CARNIVAL POINTS ✦
 </div>
 
 <div class="row">
