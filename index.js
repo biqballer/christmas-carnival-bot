@@ -241,7 +241,7 @@ h3 {
 
 <div class="card" style="
 text-align:center;
-background:radial-gradient(circle at top,#7b263b,#28172d 65%,#10182a);
+background:radial-gradient(circle at top,#1b6844,#8b1429 65%,#071b13);
 border:1px solid #d9ad61;
 padding:24px 18px;
 overflow:hidden;
@@ -251,8 +251,33 @@ overflow:hidden;
 ✦ THE FESTIVE SEASON ✦
 </div>
 
-<div style="font-size:100px;line-height:1.4;filter:drop-shadow(0 8px 12px #0008)">
+<div style="
+width:150px;
+height:150px;
+margin:18px auto;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:100px;
+background:radial-gradient(circle,#d9ad6144,#b5122a33 60%,transparent 75%);
+border:2px solid #d9ad6177;
+box-shadow:0 0 35px #b5122a44,inset 0 0 25px #d9ad6122;
+position:relative;
+">
 🐻
+<div style="
+position:absolute;
+top:5px;
+right:8px;
+font-size:30px;
+">🎅</div>
+<div style="
+position:absolute;
+bottom:5px;
+left:8px;
+font-size:25px;
+">❄️</div>
 </div>
 
 <div style="font-size:25px;font-weight:900;color:#ffdc87">
@@ -267,7 +292,7 @@ CHRISTMAS CARNIVAL
 margin-top:24px;
 padding:20px 12px;
 border-radius:18px;
-background:#10182ac9;
+background:linear-gradient(145deg,#0b2a1d,#35121b);
 border:1px solid #e8bd7655;
 ">
 
@@ -384,7 +409,11 @@ and enjoy the Christmas Carnival experience.
 </section>
 
 <section id="mining" class="hidden">
-<div class="card">
+<div class="card" style="
+background:linear-gradient(145deg,#155b3c,#76172a,#071b13);
+border:1px solid #d9ad61;
+box-shadow:0 12px 35px #0008;
+">
 <h3>⛏️ Carnival Mining</h3>
 <div class="balance">50 <span style="font-size:16px">points/hour</span></div>
 <p class="notice">Each mining session lasts 24 hours. When it ends, return to start another session.</p>
@@ -399,7 +428,7 @@ and enjoy the Christmas Carnival experience.
 
 <div class="card" style="
 text-align:center;
-background:radial-gradient(circle at top,#713047,#24182d 75%);
+background:radial-gradient(circle at top,#17613e,#85172a 75%);
 border:1px solid #d9ad61;
 padding:24px 18px;
 ">
@@ -480,7 +509,7 @@ margin:20px 0 10px;
 </div>
 
 <div style="
-background:#080f20;
+background:linear-gradient(145deg,#06170f,#30101a);
 border:1px solid #d9ad6177;
 border-radius:14px;
 padding:14px;
