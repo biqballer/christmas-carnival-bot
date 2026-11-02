@@ -190,6 +190,24 @@ h3 {
   color: #ffda87;
 }
 
+@keyframes festiveGlow {
+  0%, 100% {
+    text-shadow: 0 0 8px #ffd77855, 0 0 18px #b5122a33;
+  }
+  50% {
+    text-shadow: 0 0 16px #ffd778aa, 0 0 30px #b5122a77;
+  }
+}
+
+.logo {
+  animation: festiveGlow 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation: none;
+  }
+}
 @media (max-width: 360px) {
   .logo {
     font-size: 19px;
