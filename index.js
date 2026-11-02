@@ -34,8 +34,6 @@ const html = `<!DOCTYPE html>
 body{margin:0;background:#071b13;color:#fff;font-family:Arial,sans-serif}
 header{padding:22px 18px;text-align:center;background:linear-gradient(135deg,#103d29,#071b13);border-bottom:1px solid #b99a48}
 .logo{font-size:25px;font-weight:bold;color:#f5d77b}
-.sub{font-size:12px;color:#c9
-</style>
 * {
   box-sizing: border-box;
 }
