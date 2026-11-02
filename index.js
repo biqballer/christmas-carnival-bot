@@ -220,25 +220,149 @@ h3 {
 </nav>
 
 <section id="home">
-<div class="card">
+
+<div class="card" style="
+text-align:center;
+background:radial-gradient(circle at top,#7b263b,#28172d 65%,#10182a);
+border:1px solid #d9ad61;
+padding:24px 18px;
+overflow:hidden;
+">
+
+<div style="font-size:12px;letter-spacing:3px;color:#ffdc98;font-weight:bold">
+✦ THE FESTIVE SEASON ✦
+</div>
+
+<div style="font-size:100px;line-height:1.4;filter:drop-shadow(0 8px 12px #0008)">
+🐻
+</div>
+
+<div style="font-size:25px;font-weight:900;color:#ffdc87">
+CHRISTMAS CARNIVAL
+</div>
+
+<div style="font-size:12px;color:#f3dce2;margin-top:8px">
+🎄 Play • Mine • Earn • Celebrate 🎁
+</div>
+
+<div style="
+margin-top:24px;
+padding:20px 12px;
+border-radius:18px;
+background:#10182ac9;
+border:1px solid #e8bd7655;
+">
+
 <div class="label">YOUR CARNIVAL BALANCE</div>
-<div class="balance" id="balance">0.00</div>
-<div class="label">CARNIVAL POINTS</div>
+
+<div class="balance" id="balance"
+style="font-size:38px;margin:12px 0">
+0.00
+</div>
+
+<div style="font-size:12px;color:#ffdc87">
+✦ CARNIVAL POINTS ✦
+</div>
+
 <div class="row">
 <span>Conversion rate</span>
 <span class="gold">100 points = 1 USDT</span>
 </div>
+
 </div>
+</div>
+
 <div class="card">
-<div class="label">MINING STATUS</div>
+
+<div style="font-size:19px;font-weight:900;color:#ffdc87">
+⛏️ Carnival Mining
+</div>
+
+<p class="notice">
+Your festive fortune grows while you mine!
+</p>
+
 <div class="row">
-<strong id="miningStatus">Not mining</strong>
-<strong class="gold" id="countdown">--:--:--</strong>
+<span>Mining status</span>
+<strong id="miningStatus" class="gold">Not mining</strong>
 </div>
-<div class="bar"><div class="progress" id="progress"></div></div>
-<p class="notice" id="miningMessage">Start a mining session to earn Carnival Points.</p>
-<button id="startButton" onclick="startMining()">Start Mining</button>
+
+<div class="row">
+<span>Time remaining</span>
+<strong id="countdown">--:--:--</strong>
 </div>
+
+<div class="bar">
+<div class="progress" id="progress"></div>
+</div>
+
+<p class="notice" id="miningMessage">
+Start mining to earn Carnival Points.
+</p>
+
+<div style="font-size:12px;text-align:center;color:#ffdc87">
+⚡ 50 POINTS PER HOUR • 24-HOUR SESSION
+</div>
+
+<button id="startButton" onclick="startMining()">
+🎁 START MINING
+</button>
+
+</div>
+
+<div class="card">
+
+<div style="font-size:18px;font-weight:900;color:#ffdc87">
+🎄 Your Carnival Activities
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px">
+
+<button onclick="showPage('mining')"
+style="margin:0;padding:18px 8px">
+⛏️<br>Mining
+</button>
+
+<button onclick="showPage('friends')"
+style="margin:0;padding:18px 8px">
+👥<br>Invite Friends
+</button>
+
+<button onclick="showPage('friends')"
+style="margin:0;padding:18px 8px">
+🎁<br>Referral Rewards
+</button>
+
+<button onclick="showPage('mining')"
+style="margin:0;padding:18px 8px">
+❄️<br>My Progress
+</button>
+
+</div>
+
+</div>
+
+<div class="card" style="
+text-align:center;
+background:linear-gradient(135deg,#17412e,#10251f);
+border:1px solid #d9ad6155;
+">
+
+<div style="font-size:25px">🎁 ❄️ 🎄</div>
+
+<h3>Make This Season Count!</h3>
+
+<p class="notice">
+Mine Carnival Points, invite your friends,
+and enjoy the Christmas Carnival experience.
+</p>
+
+<button onclick="showPage('friends')">
+👥 INVITE FRIENDS
+</button>
+
+</div>
+
 </section>
 
 <section id="mining" class="hidden">
@@ -254,14 +378,139 @@ h3 {
 </section>
 
 <section id="friends" class="hidden">
-<div class="card">
-<h3>👥 Invite Friends</h3>
-<div class="balance" id="refCount">0</div>
-<div class="label">SUCCESSFUL REFERRALS</div>
-<p class="notice">Earn 50 Carnival Points for each successfully registered referral.</p>
-<div class="row"><span>Reward per referral</span><span class="gold">50 points</span></div>
-<button onclick="shareInvite()">Invite Friends</button>
+
+<div class="card" style="
+text-align:center;
+background:radial-gradient(circle at top,#713047,#24182d 75%);
+border:1px solid #d9ad61;
+padding:24px 18px;
+">
+
+<div style="font-size:65px;margin-bottom:10px">
+🎅🏻🎁
 </div>
+
+<div style="
+font-size:25px;
+font-weight:900;
+color:#ffdc87;
+">
+INVITE & EARN
+</div>
+
+<p class="notice">
+Share the Christmas spirit with your friends
+and earn Carnival Points when they join!
+</p>
+
+<div style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin:22px 0;
+">
+
+<div style="
+background:#ffffff0d;
+border:1px solid #ffffff20;
+border-radius:16px;
+padding:18px 8px;
+">
+
+<div style="font-size:26px">👥</div>
+
+<div id="refCount" style="
+font-size:30px;
+font-weight:900;
+color:#ffdc87;
+margin:8px 0;
+">0</div>
+
+<div class="label">FRIENDS INVITED</div>
+
+</div>
+
+<div style="
+background:#ffffff0d;
+border:1px solid #ffffff20;
+border-radius:16px;
+padding:18px 8px;
+">
+
+<div style="font-size:26px">🎁</div>
+
+<div style="
+font-size:30px;
+font-weight:900;
+color:#ffdc87;
+margin:8px 0;
+">50</div>
+
+<div class="label">POINTS PER REFERRAL</div>
+
+</div>
+
+</div>
+
+<div style="
+text-align:left;
+font-weight:bold;
+color:#ffdc87;
+margin:20px 0 10px;
+">
+🔗 YOUR PERSONAL INVITE LINK
+</div>
+
+<div style="
+background:#080f20;
+border:1px solid #d9ad6177;
+border-radius:14px;
+padding:14px;
+">
+
+<div id="referralDisplay" style="
+font-size:12px;
+color:#ffffff;
+overflow-wrap:anywhere;
+line-height:1.7;
+">
+Loading your personal referral link...
+</div>
+
+<button onclick="copyReferralLink()">
+📋 COPY INVITE LINK
+</button>
+
+</div>
+
+<button onclick="shareInvite()" style="
+background:linear-gradient(135deg,#287b4e,#145332);
+border:1px solid #65d99a;
+color:white;
+">
+📤 INVITE FRIENDS ON TELEGRAM
+</button>
+
+<div style="
+margin-top:22px;
+padding:16px;
+background:#ffffff09;
+border-radius:14px;
+">
+
+<div style="font-size:25px">🎄 ❄️ 🎁</div>
+
+<h3>Spread the Christmas Magic!</h3>
+
+<p class="notice">
+Invite friends to Christmas Carnival.
+Your personal link helps us track successful referrals.
+</p>
+
+</div>
+
+</div>
+
 </section>
 </div>
 </main>
@@ -316,6 +565,7 @@ async function loadAccount(){
   miningEnd = data.mining_ends_at ? new Date(data.mining_ends_at) : null;
   miningStart = data.mining_started_at ? new Date(data.mining_started_at) : null;
   referralLink = data.referral_link;
+  document.getElementById("referralDisplay").textContent = referralLink || "Referral link unavailable";
   document.getElementById("refCount").textContent = data.referral_count;
   document.getElementById("app").classList.remove("hidden");
   showStatus("Welcome to Christmas Carnival!");
@@ -386,6 +636,18 @@ function shareInvite(){
  }
 }
 
+async function copyReferralLink(){
+ if(!referralLink){
+  showStatus("Your referral link is not ready yet.");
+  return;
+ }
+ try{
+  await navigator.clipboard.writeText(referralLink);
+  showStatus("Referral link copied! Share it with your friends.");
+ }catch(error){
+  showStatus("Could not copy automatically. Press and hold the referral link to copy it.");
+ }
+}
 setInterval(updateScreen,1000);
 setInterval(loadAccount,30000);
 loadAccount();
